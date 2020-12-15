@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "832611960387",
+    "project_id": "reactnativekiddo",
+    "storage_bucket": "reactnativekiddo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832611960387:android:09d4812111f46679a276f6",
+        "android_client_info": {
+          "package_name": "com.kiddokids"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832611960387-mth7anejbnna4g2ctgankec4g0gh3j91.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXAIY_PMSTWWTy0QfzlxfzBJL2-j3WNGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832611960387-mth7anejbnna4g2ctgankec4g0gh3j91.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832611960387:android:541cdc106222c8bda276f6",
+        "android_client_info": {
+          "package_name": "com.kiddoparent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832611960387-mth7anejbnna4g2ctgankec4g0gh3j91.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXAIY_PMSTWWTy0QfzlxfzBJL2-j3WNGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832611960387-mth7anejbnna4g2ctgankec4g0gh3j91.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
