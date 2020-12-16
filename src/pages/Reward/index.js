@@ -83,10 +83,16 @@ const Reward = () => {
                       claimed: 'yes',
                     })
                     .then(() => {
-                      showMessage({
-                        message: 'Reward Claimed Successfully!',
-                        type: 'default',
-                        backgroundColor: colors.successMessage,
+                      const dbRef = firestore()
+                        .collection('user')
+                        .doc(res.uid);
+                      dbRef.get().then(result => {
+                        storeData('user', result.data());
+                        showMessage({
+                          message: 'Reward Claimed Successfully!',
+                          type: 'default',
+                          backgroundColor: colors.successMessage,
+                        });
                       });
                     });
                 });
