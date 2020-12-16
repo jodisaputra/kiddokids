@@ -30,6 +30,7 @@ const Register = ({navigation}) => {
           email: form.email,
           parent_email: form.parent_email,
           uid: success.user.uid,
+          points: '50',
         };
         firestore()
           .collection('user')

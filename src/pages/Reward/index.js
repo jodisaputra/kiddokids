@@ -1,11 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
-import {Header, HeaderProfile, Button, ListReward} from '../../components';
-import {getData} from '../../utils/localstorage';
 import firestore from '@react-native-firebase/firestore';
+import React, {useEffect, useState} from 'react';
+import {Alert, StyleSheet, View} from 'react-native';
+import {showMessage} from 'react-native-flash-message';
+import {ScrollView} from 'react-native-gesture-handler';
+import {Header, HeaderProfile, ListReward} from '../../components';
+import {colors} from '../../utils';
+import {getData, storeData} from '../../utils/localstorage';
 
-const Reward = ({navigation}) => {
+const Reward = () => {
   const [listReward, setListReward] = useState([]);
 
   useEffect(() => {
@@ -13,10 +15,10 @@ const Reward = ({navigation}) => {
   }, []);
 
   const getDataReward = () => {
-    getData('admin').then(res => {
+    getData('user').then(res => {
       firestore()
         .collection('rewards')
-        .where('added_by', '==', res.email)
+        .where('added_by', '==', res.parent_email)
         .where('claimed', '==', 'no')
         .onSnapshot(docs => {
           let listrewards = [];
@@ -30,6 +32,70 @@ const Reward = ({navigation}) => {
         });
     });
   };
+
+  const claim = rewardId => {
+    Alert.alert(
+      'Buy reward',
+      'Are you sure?',
+      [
+        {text: 'Yes', onPress: () => claimReward(rewardId)},
+        {
+          text: 'No',
+          onPress: () => console.log('No item was removed'),
+          style: 'cancel',
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  };
+
+  const claimReward = id_reward => {
+    getData('user').then(res => {
+      const dbRef = firestore()
+        .collection('user')
+        .doc(res.uid);
+      dbRef.get().then(result => {
+        firestore()
+          .collection('rewards')
+          .doc(id_reward)
+          .get()
+          .then(resultReward => {
+            const point = Math.floor(result.data().points);
+            if (point < resultReward.data().cost) {
+              showMessage({
+                message: 'sorry, your point is not enought!',
+                type: 'default',
+                backgroundColor: colors.errorMessage,
+              });
+            } else {
+              const jumlah = point - resultReward.data().cost;
+              dbRef
+                .update({
+                  points: jumlah,
+                })
+                .then(() => {
+                  firestore()
+                    .collection('rewards')
+                    .doc(id_reward)
+                    .update({
+                      claimed: 'yes',
+                    })
+                    .then(() => {
+                      showMessage({
+                        message: 'Reward Claimed Successfully!',
+                        type: 'default',
+                        backgroundColor: colors.successMessage,
+                      });
+                    });
+                });
+            }
+          });
+      });
+    });
+  };
+
   return (
     <View>
       <Header title="Reward" headertype="no-icon" />
@@ -44,18 +110,12 @@ const Reward = ({navigation}) => {
                 key={reward.key}
                 title={reward.name}
                 total={reward.cost}
-                onPress={() => navigation.navigate('RewardEdit', reward.key)}
+                onPress={() => claim(reward.key)}
               />
             );
           })}
         </View>
       </ScrollView>
-      <View style={styles.floatbutton}>
-        <Button
-          type="icon-plus"
-          onPress={() => navigation.navigate('RewardAdd')}
-        />
-      </View>
     </View>
   );
 };
@@ -70,34 +130,4 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingBottom: 200,
   },
-  floatbutton: {
-    alignSelf: 'flex-end',
-    position: 'absolute',
-    top: 720,
-    right: 10,
-  },
 });
-
-// Fire.database()
-//   .ref('rewards')
-//   .orderByChild('added_by')
-//   .equalTo(res.email)
-//   .once('value')
-//   .then((reward) => {
-//     if (reward.val()) {
-//       // variabel data dalam bentuk objek
-//       const oldData = reward.val();
-//       const data = [];
-//       Object.keys(oldData).map((key) => {
-//         data.push({
-//           id: key,
-//           data: oldData[key],
-//         });
-//       });
-//       console.log('list data hasil array', data);
-//       setListReward(data);
-//     }
-//   })
-//   .catch((error) => {
-//     console.log('error', error);
-//   });

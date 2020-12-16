@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {Button, Header, HeaderProfile, ListItem} from '../../components';
+import firestore from '@react-native-firebase/firestore';
 import moment from 'moment';
+import React, {useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {Header, HeaderProfile, ListItem} from '../../components';
 import {getData} from '../../utils/localstorage';
 
 const Home = ({navigation}) => {
@@ -14,10 +15,10 @@ const Home = ({navigation}) => {
   const getDataTask = () => {
     const today = moment(new Date()).format('MMMM, Do YYYY');
 
-    getData('admin').then(res => {
+    getData('user').then(res => {
       firestore()
         .collection('tasks')
-        .where('added_by', '==', res.email)
+        .where('added_by', '==', res.parent_email)
         .where('date', '==', today)
         .onSnapshot(docs => {
           let listtasks = [];
@@ -54,12 +55,6 @@ const Home = ({navigation}) => {
           })}
         </View>
       </ScrollView>
-      <View style={styles.floatbutton}>
-        <Button
-          type="icon-plus"
-          onPress={() => navigation.navigate('TaskAdd')}
-        />
-      </View>
     </View>
   );
 };
@@ -74,11 +69,5 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     paddingBottom: 200,
-  },
-  floatbutton: {
-    alignSelf: 'flex-end',
-    position: 'absolute',
-    top: 720,
-    right: 10,
   },
 });

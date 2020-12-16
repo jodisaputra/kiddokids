@@ -1,21 +1,19 @@
-import React, {useState, useEffect} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {ILNullPhoto} from '../../assets';
-import {Button, Header, HeaderProfile} from '../../components';
-import {colors} from '../../utils';
-import {getData} from '../../utils/localstorage';
 import auth from '@react-native-firebase/auth';
+import React, {useEffect, useState} from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {ILNullPhoto, IconStar} from '../../assets';
+import {Button} from '../../components';
+import {colors, fonts} from '../../utils';
+import {getData} from '../../utils/localstorage';
 
 const Profile = () => {
   const [profile, setProfile] = useState({
-    photo: ILNullPhoto,
     name: '',
   });
 
   useEffect(() => {
-    getData('admin').then(res => {
-      const data = res;
-      data.photo = {uri: res.photo};
+    getData('user').then(res => {
+      console.log(res);
       setProfile(res);
     });
   }, []);
@@ -29,10 +27,17 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       <View style={styles.avatarBorder}>
-        <Image source={profile.photo} style={styles.avatar} />
+        <Image source={ILNullPhoto} style={styles.avatar} />
       </View>
       <View style={styles.page}>
         <Text>{profile.name}</Text>
+      </View>
+      <View style={styles.wrapper}>
+        <Text>Your Points</Text>
+        <View style={styles.poin}>
+          <IconStar style={styles.icon} />
+          <Text style={styles.total}>{profile.points}</Text>
+        </View>
       </View>
       <Button title="logout" onPress={logout} />
     </View>
@@ -53,5 +58,15 @@ const styles = StyleSheet.create({
     borderRadius: 130 / 2,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  wrapper: {flex: 1},
+  text: {fontFamily: fonts.primary[600]},
+  total: {fontFamily: fonts.primary[400]},
+  icon: {width: 25, height: 25, marginRight: 3},
+  poin: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 10,
   },
 });

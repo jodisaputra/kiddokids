@@ -35,4 +35,5 @@ export const colors = {
   },
   loadingBackground: mainColors.black1,
   errorMessage: mainColors.red1,
+  successMessage: mainColors.green1,
 };
